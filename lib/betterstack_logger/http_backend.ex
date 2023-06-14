@@ -1,15 +1,15 @@
-defmodule LogflareLogger.HttpBackend do
+defmodule BetterstackLogger.HttpBackend do
   @moduledoc """
   Implements :gen_event behaviour, handles incoming Logger messages
   """
 
-  @default_api_url "https://api.logflare.app"
-  @app :logflare_logger_backend
+  @default_api_url "https://api.betterstack.app"
+  @app :betterstack_logger_backend
   @behaviour :gen_event
 
   require Logger
-  alias LogflareLogger.{Formatter, BatchCache, CLI, Utils}
-  alias LogflareLogger.BackendConfig, as: Config
+  alias BetterstackLogger.{Formatter, BatchCache, CLI, Utils}
+  alias BetterstackLogger.BackendConfig, as: Config
 
   @type level :: Logger.level()
   @type message :: Logger.message()
@@ -51,8 +51,8 @@ defmodule LogflareLogger.HttpBackend do
   end
 
   def handle_info(:in_flight_check, config) do
-    # If we somehow have events in flight stuck in our Repo, they get reset here to get flushed to Logflare.
-    if GenServer.whereis(LogflareLogger.Repo) do
+    # If we somehow have events in flight stuck in our Repo, they get reset here to get flushed to Betterstack.
+    if GenServer.whereis(BetterstackLogger.Repo) do
       count = BatchCache.events_in_flight() |> BatchCache.reset_events_in_flight() |> Enum.count()
 
       if count > 0 do
@@ -92,7 +92,7 @@ defmodule LogflareLogger.HttpBackend do
     # 3. System environment
     # 4. Current config
 
-    sys_options = Utils.find_logflare_sys_envs()
+    sys_options = Utils.find_betterstack_sys_envs()
     app_options = Application.get_all_env(@app)
 
     options =
@@ -113,7 +113,7 @@ defmodule LogflareLogger.HttpBackend do
     CLI.throw_on_missing_source!(source_id)
     CLI.throw_on_missing_api_key!(api_key)
 
-    api_client = LogflareApiClient.new(%{url: url, api_key: api_key})
+    api_client = BetterstackApiClient.new(%{url: url, api_key: api_key})
 
     config =
       struct!(
@@ -130,11 +130,11 @@ defmodule LogflareLogger.HttpBackend do
         }
       )
 
-    if :ets.info(:logflare_logger_table) === :undefined do
-      :ets.new(:logflare_logger_table, [:named_table, :set, :public])
+    if :ets.info(:betterstack_logger_table) === :undefined do
+      :ets.new(:betterstack_logger_table, [:named_table, :set, :public])
     end
 
-    :ets.insert(:logflare_logger_table, {:config, config})
+    :ets.insert(:betterstack_logger_table, {:config, config})
 
     config
   end
@@ -143,7 +143,7 @@ defmodule LogflareLogger.HttpBackend do
 
   @spec flush!(Config.t()) :: {:ok, Config.t()}
   defp flush!(%Config{} = config) do
-    if GenServer.whereis(LogflareLogger.Repo) do
+    if GenServer.whereis(BetterstackLogger.Repo) do
       BatchCache.flush(config)
     end
 
@@ -161,7 +161,7 @@ defmodule LogflareLogger.HttpBackend do
   end
 
   defp log_after(level, message, delay \\ 5_000) do
-    # We'd like to see these in Logflare so we delay the log message to make sure Logger and the Logflare backend has been started
+    # We'd like to see these in Betterstack so we delay the log message to make sure Logger and the Betterstack backend has been started
     Process.send_after(self(), {:log_after, level, message}, delay)
   end
 

@@ -1,4 +1,4 @@
-defmodule LogflareLogger.Utils do
+defmodule BetterstackLogger.Utils do
   @moduledoc false
   def default_metadata_keys do
     ~w[
@@ -18,7 +18,7 @@ defmodule LogflareLogger.Utils do
     ]
   end
 
-  def find_logflare_sys_envs() do
+  def find_betterstack_sys_envs() do
     envs = System.get_env()
 
     for {"LOGFLARE_" <> k, v} <- envs do

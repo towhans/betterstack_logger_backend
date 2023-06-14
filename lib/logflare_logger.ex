@@ -1,7 +1,7 @@
-defmodule LogflareLogger do
+defmodule BetterstackLogger do
   @moduledoc """
   """
-  alias LogflareLogger.{BatchCache, Formatter}
+  alias BetterstackLogger.{BatchCache, Formatter}
 
   def debug(message, metadata \\ []) do
     log(:debug, message, metadata)
@@ -23,7 +23,7 @@ defmodule LogflareLogger do
     dt = NaiveDateTime.utc_now()
     {date, {hour, minute, second}} = NaiveDateTime.to_erl(dt)
     datetime = {date, {hour, minute, second, dt.microsecond}}
-    config = :ets.lookup(:logflare_logger_table, :config) |> Keyword.get(:config)
+    config = :ets.lookup(:betterstack_logger_table, :config) |> Keyword.get(:config)
 
     metadata =
       metadata
@@ -37,7 +37,7 @@ defmodule LogflareLogger do
   end
 
   @doc """
-  If no argument is provided, returns the LogflareLogger context stored in the process dictionary.
+  If no argument is provided, returns the BetterstackLogger context stored in the process dictionary.
   """
   @spec context() :: map()
   def context() do
@@ -46,8 +46,8 @@ defmodule LogflareLogger do
   end
 
   @doc """
-  If the argument is an atom, returns LogflareLogger context for the given key.
-  If the argument is a map or keyword list, their keys/values are merged with the existing LogflareLogger context in the process dictionary. Setting the key to nil will remove that key from the context.
+  If the argument is an atom, returns BetterstackLogger context for the given key.
+  If the argument is a map or keyword list, their keys/values are merged with the existing BetterstackLogger context in the process dictionary. Setting the key to nil will remove that key from the context.
   """
   @spec context(map() | keyword()) :: map()
   def context(map) when is_map(map) do

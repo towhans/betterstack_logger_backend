@@ -1,4 +1,4 @@
-defmodule LogflareLogger.Stacktrace do
+defmodule BetterstackLogger.Stacktrace do
   @moduledoc """
   Handles stacktrace formatting for logged exceptions
   """

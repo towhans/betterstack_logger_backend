@@ -1,6 +1,6 @@
-defmodule LogflareLogger.HttpBackendTest do
+defmodule BetterstackLogger.HttpBackendTest do
   use ExUnit.Case
-  alias LogflareLogger.{HttpBackend, Formatter, BatchCache}
+  alias BetterstackLogger.{HttpBackend, Formatter, BatchCache}
   use Placebo
 
   @default_config [
@@ -46,8 +46,8 @@ defmodule LogflareLogger.HttpBackendTest do
     end
 
     test "flushes after batch reaches max_batch_size" do
-      allow(LogflareApiClient.new(any()), return: %Tesla.Client{})
-      allow(LogflareApiClient.post_logs(any(), any(), any()), return: {:ok, %Tesla.Env{}})
+      allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
+      allow(BetterstackApiClient.post_logs(any(), any(), any()), return: {:ok, %Tesla.Env{}})
 
       {:ok, state} = init_with_default(flush_interval: 60_000)
 
@@ -64,7 +64,7 @@ defmodule LogflareLogger.HttpBackendTest do
       Process.sleep(200)
 
       assert_called(
-        LogflareApiClient.post_logs(
+        BetterstackApiClient.post_logs(
           any(),
           is(fn batch ->
             assert length(batch) == 10

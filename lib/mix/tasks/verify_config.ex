@@ -1,14 +1,14 @@
-defmodule Mix.Tasks.LogflareLogger.VerifyConfig do
-  alias LogflareLogger.CLI
+defmodule Mix.Tasks.BetterstackLogger.VerifyConfig do
+  alias BetterstackLogger.CLI
   use Mix.Task
 
-  @app :logflare_logger_backend
-  @default_api_url "https://api.logflare.app"
+  @app :betterstack_logger_backend
+  @default_api_url "https://api.betterstack.app"
 
   @impl Mix.Task
   def run(_args \\ []) do
     IO.puts("You are verifying config for the #{Mix.env()} environment")
-    {:ok, _} = Application.ensure_all_started(:logflare_logger_backend)
+    {:ok, _} = Application.ensure_all_started(:betterstack_logger_backend)
 
     api_key = get_env(:api_key) || System.get_env("LOGFLARE_API_KEY")
     source_id = get_env(:source_id) || System.get_env("LOGFLARE_SOURCE_ID")
@@ -18,16 +18,16 @@ defmodule Mix.Tasks.LogflareLogger.VerifyConfig do
     CLI.throw_on_missing_source!(source_id)
     CLI.throw_on_missing_url!(url)
 
-    client = LogflareApiClient.new(%{api_key: api_key, url: url})
+    client = BetterstackApiClient.new(%{api_key: api_key, url: url})
 
     timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.to_iso8601() |> Kernel.<>("Z")
 
     result =
-      LogflareApiClient.post_logs(
+      BetterstackApiClient.post_logs(
         client,
         [
           %{
-            "message" => "LogflareLogger has been properly setup",
+            "message" => "BetterstackLogger has been properly setup",
             "metadata" => %{},
             "level" => "info",
             "timestamp" => timestamp
@@ -38,10 +38,10 @@ defmodule Mix.Tasks.LogflareLogger.VerifyConfig do
 
     case result do
       {:ok, %{status: status}} when status in 200..299 ->
-        IO.puts("Logflare API endpoint responded ok, check your dashboard!")
+        IO.puts("Betterstack API endpoint responded ok, check your dashboard!")
 
       {:ok, %{status: status, body: body}} ->
-        IO.puts("HTTP request to Logflare API endpoint returned an HTTP status code #{status}.")
+        IO.puts("HTTP request to Betterstack API endpoint returned an HTTP status code #{status}.")
         IO.puts("Response body is: #{body}")
 
       {:error, tesla_env} ->

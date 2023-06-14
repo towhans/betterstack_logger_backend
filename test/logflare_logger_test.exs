@@ -1,9 +1,9 @@
-defmodule LogflareLoggerTest do
+defmodule BetterstackLoggerTest do
   @moduledoc false
-  alias LogflareLogger.HttpBackend
+  alias BetterstackLogger.HttpBackend
   use ExUnit.Case
-  import LogflareLogger
-  doctest LogflareLogger
+  import BetterstackLogger
+  doctest BetterstackLogger
   use Placebo
   require Logger
 
@@ -12,12 +12,12 @@ defmodule LogflareLoggerTest do
   @source "source2354551"
 
   setup_all do
-    Application.put_env(:logflare_logger_backend, :url, "http://127.0.0.1:4000")
-    Application.put_env(:logflare_logger_backend, :api_key, @api_key)
-    Application.put_env(:logflare_logger_backend, :source_id, @source)
-    Application.put_env(:logflare_logger_backend, :level, :info)
-    Application.put_env(:logflare_logger_backend, :flush_interval, 100)
-    Application.put_env(:logflare_logger_backend, :max_batch_size, 2)
+    Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:4000")
+    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
+    Application.put_env(:betterstack_logger_backend, :source_id, @source)
+    Application.put_env(:betterstack_logger_backend, :level, :info)
+    Application.put_env(:betterstack_logger_backend, :flush_interval, 100)
+    Application.put_env(:betterstack_logger_backend, :max_batch_size, 2)
 
     case Logger.add_backend(@logger_backend) do
       {:ok, _pid} -> :noop
@@ -25,36 +25,36 @@ defmodule LogflareLoggerTest do
       {:error, err} -> throw(err)
     end
 
-    on_exit(&LogflareLogger.reset_context/0)
+    on_exit(&BetterstackLogger.reset_context/0)
     :ok
   end
 
   describe "debug, info, warn, error functions" do
     test "uses same configuration as Logger functions" do
-      allow(LogflareApiClient.new(any()), return: %Tesla.Client{})
+      allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
 
-      allow(LogflareApiClient.post_logs(any(), any(), any()),
+      allow(BetterstackApiClient.post_logs(any(), any(), any()),
         return: {:ok, %Tesla.Env{status: 200}}
       )
 
-      LogflareLogger.context(%{context_key: [:context_value, 1, "string"]})
+      BetterstackLogger.context(%{context_key: [:context_value, 1, "string"]})
       Logger.bare_log(:info, "msg", data: %{a: 1})
-      LogflareLogger.info("msg", data: %{a: 1})
+      BetterstackLogger.info("msg", data: %{a: 1})
 
       Process.sleep(200)
 
       assert_called(
-        LogflareApiClient.post_logs(
+        BetterstackApiClient.post_logs(
           any(),
-          is(fn [logger, logflare_logger] ->
+          is(fn [logger, betterstack_logger] ->
             assert Map.drop(logger["metadata"]["context"], ~w[domain gl time]) ==
-                     Map.drop(logflare_logger["metadata"]["context"], ~w[domain gl time])
+                     Map.drop(betterstack_logger["metadata"]["context"], ~w[domain gl time])
 
             assert Map.drop(logger["metadata"], ~w[context]) ==
-                     Map.drop(logflare_logger["metadata"], ~w[context])
+                     Map.drop(betterstack_logger["metadata"], ~w[context])
 
             assert Map.drop(logger, ~w[metadata timestamp]) ==
-                     Map.drop(logflare_logger, ~w[metadata timestamp])
+                     Map.drop(betterstack_logger, ~w[metadata timestamp])
           end),
           any()
         )

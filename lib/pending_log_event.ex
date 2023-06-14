@@ -1,4 +1,4 @@
-defmodule LogflareLogger.PendingLoggerEvent do
+defmodule BetterstackLogger.PendingLoggerEvent do
   use Ecto.Schema
   import Ecto.Changeset
 

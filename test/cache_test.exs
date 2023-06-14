@@ -1,10 +1,10 @@
-defmodule LogflareLogger.BatchCacheTest do
+defmodule BetterstackLogger.BatchCacheTest do
   @moduledoc false
   use ExUnit.Case
-  alias LogflareLogger.BatchCache
+  alias BetterstackLogger.BatchCache
 
   @backend_config %{
-    api_client: LogflareApiClient.new(%{url: "http://localhost:4000", api_key: ""}),
+    api_client: BetterstackApiClient.new(%{url: "http://localhost:4000", api_key: ""}),
     source_id: "source-id",
     batch_max_size: 10
   }

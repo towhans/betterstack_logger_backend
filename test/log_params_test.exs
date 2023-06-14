@@ -1,7 +1,7 @@
-defmodule LogflareLogger.LogParamsTest do
+defmodule BetterstackLogger.LogParamsTest do
   @moduledoc false
   use ExUnit.Case
-  alias LogflareLogger.{LogParams}
+  alias BetterstackLogger.{LogParams}
   require Logger
   use Placebo
 

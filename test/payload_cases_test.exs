@@ -1,7 +1,7 @@
-defmodule LogflareLogger.PayloadCasesTest do
+defmodule BetterstackLogger.PayloadCasesTest do
   @moduledoc false
   use ExUnit.Case
-  alias LogflareLogger.HttpBackend
+  alias BetterstackLogger.HttpBackend
   require Logger
   use Placebo
 
@@ -10,12 +10,12 @@ defmodule LogflareLogger.PayloadCasesTest do
   @source "dad2a85c-683e-4150-abf1-f3001cf39e57"
 
   setup do
-    Application.put_env(:logflare_logger_backend, :url, "http://127.0.0.1:4000")
-    Application.put_env(:logflare_logger_backend, :api_key, @api_key)
-    Application.put_env(:logflare_logger_backend, :source_id, @source)
-    Application.put_env(:logflare_logger_backend, :level, :info)
-    Application.put_env(:logflare_logger_backend, :flush_interval, 100)
-    Application.put_env(:logflare_logger_backend, :batch_max_size, 1)
+    Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:4000")
+    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
+    Application.put_env(:betterstack_logger_backend, :source_id, @source)
+    Application.put_env(:betterstack_logger_backend, :level, :info)
+    Application.put_env(:betterstack_logger_backend, :flush_interval, 100)
+    Application.put_env(:betterstack_logger_backend, :batch_max_size, 1)
 
     Logger.add_backend(@logger_backend)
 
@@ -28,9 +28,9 @@ defmodule LogflareLogger.PayloadCasesTest do
 
   describe "payload edge cases" do
     test "simple tuple" do
-      allow(LogflareApiClient.new(any()), return: %Tesla.Client{})
+      allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
 
-      allow(LogflareApiClient.post_logs(any(), any(), any()),
+      allow(BetterstackApiClient.post_logs(any(), any(), any()),
         return: {:ok, %Tesla.Env{status: 200}}
       )
 
@@ -41,7 +41,7 @@ defmodule LogflareLogger.PayloadCasesTest do
       )
 
       Process.sleep(200)
-      assert_called(LogflareApiClient.post_logs(any(), any(), any()))
+      assert_called(BetterstackApiClient.post_logs(any(), any(), any()))
     end
   end
 end

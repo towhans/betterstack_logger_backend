@@ -1,12 +1,12 @@
-defmodule LogflareLogger.BatchCache do
+defmodule BetterstackLogger.BatchCache do
   @moduledoc """
   Caches the batch, dispatches API post request if the batch is larger than configured max batch size or flush is called.
 
   Doesn't error or drop the message if the API is unresponsive, holds them
   """
 
-  alias LogflareLogger.Repo
-  alias LogflareLogger.PendingLoggerEvent
+  alias BetterstackLogger.Repo
+  alias BetterstackLogger.PendingLoggerEvent
   import Ecto.Query
 
   # batch limit prevents runaway memory usage if API is unresponsive
@@ -62,7 +62,7 @@ defmodule LogflareLogger.BatchCache do
           {:ok, %Tesla.Env{status: status, body: body}} ->
             unless status in 200..299 do
               IO.warn(
-                "Logflare API warning: HTTP response status is #{status}. Response body is: #{inspect(body)}"
+                "Betterstack API warning: HTTP response status is #{status}. Response body is: #{inspect(body)}"
               )
             end
 
@@ -71,7 +71,7 @@ defmodule LogflareLogger.BatchCache do
             end
 
           {:error, reason} ->
-            IO.warn("Logflare API error: #{inspect(reason)}")
+            IO.warn("Betterstack API error: #{inspect(reason)}")
 
             reset_events_in_flight(ples)
 
@@ -89,7 +89,7 @@ defmodule LogflareLogger.BatchCache do
 
   def post_logs(events, %{api_client: api_client, source_id: source_id}) do
     events = Enum.map(events, & &1.body)
-    LogflareApiClient.post_logs(api_client, events, source_id)
+    BetterstackApiClient.post_logs(api_client, events, source_id)
   end
 
   def sort_by_created_asc(pending_events) do

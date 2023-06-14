@@ -1,8 +1,8 @@
-defmodule LogflareLogger.LogParams do
+defmodule BetterstackLogger.LogParams do
   @moduledoc """
   Parses and encodes incoming Logger messages for further serialization.
   """
-  alias LogflareLogger.{Stacktrace, Utils}
+  alias BetterstackLogger.{Stacktrace, Utils}
   @default_metadata_keys Utils.default_metadata_keys()
 
   @doc """
@@ -150,7 +150,7 @@ defmodule LogflareLogger.LogParams do
   end
 
   @doc """
-  All atoms are converted to strings for Logflare server to be able
+  All atoms are converted to strings for Betterstack server to be able
   to safely convert binary to terms using :erlang.binary_to_term(binary, [:safe])
   """
   def traverse_convert(x) when is_boolean(x), do: x

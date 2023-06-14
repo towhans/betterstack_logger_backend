@@ -1,9 +1,9 @@
-defmodule LogflareLogger.MixProject do
+defmodule BetterstackLogger.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :logflare_logger_backend,
+      app: :betterstack_logger_backend,
       version: "0.11.1",
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -11,9 +11,9 @@ defmodule LogflareLogger.MixProject do
       deps: deps(),
       description: description(),
       package: package(),
-      name: "Logflare Logger Backend",
-      source_url: "https://github.com/Logflare/logflare_logger_backend",
-      homepage_url: "https://logflare.app",
+      name: "Betterstack Logger Backend",
+      source_url: "https://github.com/Betterstack/betterstack_logger_backend",
+      homepage_url: "https://betterstack.app",
       docs: [
         main: "readme",
         # logo: "path/to/logo.png",
@@ -26,7 +26,7 @@ defmodule LogflareLogger.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {LogflareLogger.Application, []}
+      mod: {BetterstackLogger.Application, []}
     ]
   end
 
@@ -39,7 +39,7 @@ defmodule LogflareLogger.MixProject do
       {:typed_struct, "~> 0.3.0"},
       {:bertex, "~> 1.3"},
       {:etso, "~> 1.1.0"},
-      {:logflare_api_client, "~> 0.3.5"},
+      {:betterstack_api_client, "~> 0.3.5"},
 
       # Test and Dev
       {:placebo, "~> 2.0", only: :test},
@@ -50,12 +50,12 @@ defmodule LogflareLogger.MixProject do
   end
 
   defp description() do
-    "Easily ship structured logs and log based metrics to Logflare with the Logflare Logger backend."
+    "Easily ship structured logs and log based metrics to Betterstack with the Betterstack Logger backend."
   end
 
   defp package() do
     [
-      links: %{"GitHub" => "https://github.com/Logflare/logflare_logger_backend"},
+      links: %{"GitHub" => "https://github.com/Betterstack/betterstack_logger_backend"},
       licenses: ["MIT"]
     ]
   end

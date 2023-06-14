@@ -1,9 +1,9 @@
-defmodule LogflareLogger.BackendConfig do
+defmodule BetterstackLogger.BackendConfig do
   @moduledoc false
   @default_batch_size 100
   @default_flush_interval 5000
 
-  alias LogflareLogger.{Formatter}
+  alias BetterstackLogger.{Formatter}
 
   use TypedStruct
 

@@ -1,10 +1,10 @@
-defmodule LogflareLogger.IntegrationTest do
+defmodule BetterstackLogger.IntegrationTest do
   @moduledoc false
   use ExUnit.Case
-  alias LogflareLogger.{HttpBackend, TestUtils}
+  alias BetterstackLogger.{HttpBackend, TestUtils}
   require Logger
 
-  @path LogflareApiClient.api_path()
+  @path BetterstackApiClient.api_path()
 
   @logger_backend HttpBackend
   @api_key "l3kh47jsakf2370dasg"
@@ -12,17 +12,17 @@ defmodule LogflareLogger.IntegrationTest do
 
   setup do
     bypass = Bypass.open()
-    Application.put_env(:logflare_logger_backend, :url, "http://127.0.0.1:#{bypass.port}")
-    Application.put_env(:logflare_logger_backend, :api_key, @api_key)
-    Application.put_env(:logflare_logger_backend, :source_id, @source)
-    Application.put_env(:logflare_logger_backend, :level, :info)
-    Application.put_env(:logflare_logger_backend, :flush_interval, 500)
-    Application.put_env(:logflare_logger_backend, :max_batch_size, 100)
+    Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:#{bypass.port}")
+    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
+    Application.put_env(:betterstack_logger_backend, :source_id, @source)
+    Application.put_env(:betterstack_logger_backend, :level, :info)
+    Application.put_env(:betterstack_logger_backend, :flush_interval, 500)
+    Application.put_env(:betterstack_logger_backend, :max_batch_size, 100)
 
     Logger.add_backend(@logger_backend)
 
     on_exit(fn ->
-      LogflareLogger.context(test_context: nil)
+      BetterstackLogger.context(test_context: nil)
       Logger.remove_backend(@logger_backend, flush: true)
     end)
 
@@ -32,7 +32,7 @@ defmodule LogflareLogger.IntegrationTest do
   test "logger backend sends a POST request", %{bypass: bypass} do
     :ok = Logger.configure_backend(@logger_backend, metadata: [])
     log_msg = "Incoming log from test"
-    LogflareLogger.context(test_context: %{some_metric: 1337})
+    BetterstackLogger.context(test_context: %{some_metric: 1337})
 
     Bypass.expect(bypass, "POST", @path, fn conn ->
       {:ok, body, conn} = Plug.Conn.read_body(conn)
@@ -85,7 +85,7 @@ defmodule LogflareLogger.IntegrationTest do
   @msg "Incoming log from test with all metadata"
   test "correctly handles metadata keys", %{bypass: bypass} do
     :ok = Logger.configure_backend(@logger_backend, metadata: :all)
-    LogflareLogger.context(test_context: %{some_metric: 7331})
+    BetterstackLogger.context(test_context: %{some_metric: 7331})
 
     Bypass.expect_once(bypass, "POST", @path, fn conn ->
       {:ok, body, conn} = Plug.Conn.read_body(conn)
