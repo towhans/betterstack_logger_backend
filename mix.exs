@@ -12,8 +12,7 @@ defmodule BetterstackLogger.MixProject do
       description: description(),
       package: package(),
       name: "Betterstack Logger Backend",
-      source_url: "https://github.com/Betterstack/betterstack_logger_backend",
-      homepage_url: "https://betterstack.app",
+      source_url: "https://github.com/towhans/betterstack_logger_backend",
       docs: [
         main: "readme",
         # logo: "path/to/logo.png",
@@ -55,7 +54,7 @@ defmodule BetterstackLogger.MixProject do
 
   defp package() do
     [
-      links: %{"GitHub" => "https://github.com/Betterstack/betterstack_logger_backend"},
+      links: %{"GitHub" => "https://github.com/towhans/betterstack_logger_backend"},
       licenses: ["MIT"]
     ]
   end
