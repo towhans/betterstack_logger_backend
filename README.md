@@ -1,6 +1,6 @@
 # BetterstackLogger
 
-An Elixir Logger backend for [Betterstack](https://github.com/Betterstack/betterstack). Streams logs to the [Betterstack.app](https://betterstack.app) API.
+An Elixir Logger backend for [Betterstack](https://betterstack.com/logs).
 
 # Configuration
 
