@@ -21,7 +21,7 @@ defmodule BetterstackLogger.Utils do
   def find_betterstack_sys_envs() do
     envs = System.get_env()
 
-    for {"LOGFLARE_" <> k, v} <- envs do
+    for {"BETTERSTACK_" <> k, v} <- envs do
       k = String.downcase(k) |> String.to_atom()
       v = if k == :level, do: String.to_atom(v), else: v
 

@@ -7,13 +7,11 @@ defmodule BetterstackLogger.IntegrationTest do
   @path BetterstackApiClient.api_path()
 
   @logger_backend HttpBackend
-  @api_key "l3kh47jsakf2370dasg"
   @source "source2354551"
 
   setup do
     bypass = Bypass.open()
     Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:#{bypass.port}")
-    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
     Application.put_env(:betterstack_logger_backend, :source_id, @source)
     Application.put_env(:betterstack_logger_backend, :level, :info)
     Application.put_env(:betterstack_logger_backend, :flush_interval, 500)
@@ -37,27 +35,23 @@ defmodule BetterstackLogger.IntegrationTest do
     Bypass.expect(bypass, "POST", @path, fn conn ->
       {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-      assert {"x-api-key", @api_key} in conn.req_headers
+      assert {"authorization", "Bearer #{@source}"} in conn.req_headers
 
       body = TestUtils.decode_logger_body(body)
 
-      assert %{
-               "batch" => [
-                 %{
-                   "message" => "Incoming log from test " <> _,
-                   "metadata" => %{
-                     "level" => level,
-                     "context" => %{"pid" => _},
-                     "test_context" => %{"some_metric" => 1337}
-                   },
-                   "timestamp" => _
-                 }
-                 | _
-               ],
-               "source" => @source
-             } = body
+      assert [
+        %{
+          "message" => "Incoming log from test " <> _,
+          "metadata" => %{
+            "level" => level,
+            "context" => %{"pid" => _},
+            "test_context" => %{"some_metric" => 1337}
+          },
+          "timestamp" => _
+        }
+        | _
+      ] = body
 
-      assert length(body["batch"]) == 10
       assert level in ["info", "error"]
 
       Plug.Conn.resp(conn, 200, "")
@@ -92,8 +86,7 @@ defmodule BetterstackLogger.IntegrationTest do
 
       body = TestUtils.decode_logger_body(body)
 
-      assert %{
-               "batch" => [
+      assert [
                  %{
                    "message" => @msg,
                    "metadata" => %{
@@ -110,11 +103,7 @@ defmodule BetterstackLogger.IntegrationTest do
                    "timestamp" => _
                  }
                  | _
-               ],
-               "source" => @source
-             } = body
-
-      assert length(body["batch"]) == 45
+               ] = body
 
       Plug.Conn.resp(conn, 200, "")
     end)

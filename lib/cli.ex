@@ -11,12 +11,6 @@ defmodule BetterstackLogger.CLI do
     end
   end
 
-  def throw_on_missing_api_key!(api_key) do
-    unless api_key do
-      throw("Betterstack API key #{not_configured()}")
-    end
-  end
-
   def not_configured() do
     "for BetterstackLogger backend is NOT configured"
   end

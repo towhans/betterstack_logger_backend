@@ -8,12 +8,10 @@ defmodule BetterstackLoggerTest do
   require Logger
 
   @logger_backend HttpBackend
-  @api_key "l3kh47jsakf2370dasg"
   @source "source2354551"
 
   setup_all do
     Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:4000")
-    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
     Application.put_env(:betterstack_logger_backend, :source_id, @source)
     Application.put_env(:betterstack_logger_backend, :level, :info)
     Application.put_env(:betterstack_logger_backend, :flush_interval, 100)
@@ -33,7 +31,7 @@ defmodule BetterstackLoggerTest do
     test "uses same configuration as Logger functions" do
       allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
 
-      allow(BetterstackApiClient.post_logs(any(), any(), any()),
+      allow(BetterstackApiClient.post_logs(any(), any()),
         return: {:ok, %Tesla.Env{status: 200}}
       )
 
@@ -55,8 +53,7 @@ defmodule BetterstackLoggerTest do
 
             assert Map.drop(logger, ~w[metadata timestamp]) ==
                      Map.drop(betterstack_logger, ~w[metadata timestamp])
-          end),
-          any()
+          end)
         )
       )
     end

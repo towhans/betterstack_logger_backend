@@ -3,22 +3,20 @@ defmodule Mix.Tasks.BetterstackLogger.VerifyConfig do
   use Mix.Task
 
   @app :betterstack_logger_backend
-  @default_api_url "https://api.betterstack.app"
+  @default_api_url "https://in.logs.betterstack.com"
 
   @impl Mix.Task
   def run(_args \\ []) do
     IO.puts("You are verifying config for the #{Mix.env()} environment")
     {:ok, _} = Application.ensure_all_started(:betterstack_logger_backend)
 
-    api_key = get_env(:api_key) || System.get_env("LOGFLARE_API_KEY")
-    source_id = get_env(:source_id) || System.get_env("LOGFLARE_SOURCE_ID")
-    url = get_env(:url) || System.get_env("LOGFLARE_URL") || @default_api_url
+    source_id = get_env(:source_id) || System.get_env("BETTERSTACK_SOURCE_ID")
+    url = get_env(:url) || System.get_env("BETTERSTACK_URL") || @default_api_url
 
-    CLI.throw_on_missing_api_key!(api_key)
     CLI.throw_on_missing_source!(source_id)
     CLI.throw_on_missing_url!(url)
 
-    client = BetterstackApiClient.new(%{api_key: api_key, url: url})
+    client = BetterstackApiClient.new(%{source_id: source_id, url: url})
 
     timestamp = NaiveDateTime.utc_now() |> NaiveDateTime.to_iso8601() |> Kernel.<>("Z")
 
@@ -32,8 +30,7 @@ defmodule Mix.Tasks.BetterstackLogger.VerifyConfig do
             "level" => "info",
             "timestamp" => timestamp
           }
-        ],
-        source_id
+        ]
       )
 
     case result do

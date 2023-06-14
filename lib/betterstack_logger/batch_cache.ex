@@ -87,9 +87,9 @@ defmodule BetterstackLogger.BatchCache do
     Repo.all(PendingLoggerEvent) |> Enum.map(&Repo.delete(&1))
   end
 
-  def post_logs(events, %{api_client: api_client, source_id: source_id}) do
+  def post_logs(events, %{api_client: api_client}) do
     events = Enum.map(events, & &1.body)
-    BetterstackApiClient.post_logs(api_client, events, source_id)
+    BetterstackApiClient.post_logs(api_client, events)
   end
 
   def sort_by_created_asc(pending_events) do

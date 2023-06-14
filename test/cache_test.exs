@@ -4,7 +4,7 @@ defmodule BetterstackLogger.BatchCacheTest do
   alias BetterstackLogger.BatchCache
 
   @backend_config %{
-    api_client: BetterstackApiClient.new(%{url: "http://localhost:4000", api_key: ""}),
+    api_client: BetterstackApiClient.new(%{url: "http://localhost:4000", source_id: "source-id"}),
     source_id: "source-id",
     batch_max_size: 10
   }

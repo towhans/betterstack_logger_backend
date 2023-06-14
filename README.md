@@ -4,8 +4,6 @@ An Elixir Logger backend for [Betterstack](https://github.com/Betterstack/better
 
 # Configuration
 
-Get your `api_key` and create a `source` at [betterstack.app](https://betterstack.app/dashboard)
-
 You will need a Betterstack source **source_id** which you can copy from your dashboard after you create a one.
 
 ```elixir
@@ -14,21 +12,20 @@ config :logger,
   backends: [BetterstackLogger.HttpBackend]
 
 config :betterstack_logger_backend,
-  url: "https://api.betterstack.app", # https://api.betterstack.app is configured by default and you can set your own url
+  url: "https://in.logs.betterstack.com", # https://in.logs.bettersack.com is configured by default and you can set your own url
   level: :info, # Default BetterstackLogger level is :info. Note that log messages are filtered by the :logger application first
-  api_key: "...", # your Betterstack API key, found on your dashboard
   source_id: "...", # the Betterstack source UUID, found  on your Betterstack dashboard
   flush_interval: 1_000, # minimum time in ms before a log batch is sent
   max_batch_size: 50, # maximum number of events before a log batch is sent
   metadata: :all # optionally you can drop keys if they exist with `metadata: [drop: [:list, :keys, :to, :drop]]`
 ```
 
-Alternatively, you can configure these options in your system environment. Prefix the above option names with `LOGFLARE_`.
+Alternatively, you can configure these options in your system environment. Prefix the above option names with `BETTERSTACK_`.
 
 ```bash
-export LOGFLARE_URL="https://api.betterstack.app"
-export LOGFLARE_API_KEY="..."
-export LOGFLARE_SOURCE_ID="..."
+export BETTERSTACK_URL="https://in.logs.betterstack.com"
+export BETTERSTACK_API_KEY="..."
+export BETTERSTACK_SOURCE_ID="..."
 ```
 
 ## Usage
@@ -57,7 +54,7 @@ BetterstackLogger.reset_context()
 
 Betterstack log event BigQuery table schema is auto-generated per source. If you send a log with `Logger.info("first", user: %{id: 1})`, Betterstack will generate a metadata field of type integer. If in the future, you'll send a log event to the same source using `Logger.info("first", user: %{id: "d9c2feff-d38a-4671-8de4-a1e7f7dd7e3c"1})`, the log with a binary id will be rejected.
 
-BetterstackLogger log payloads sent to Betterstack API are encoded using [BERT](http://bert-rpc.org).
+BetterstackLogger log payloads sent to Betterstack API are encoded using MsgPack
 
 At this moment BetterstackLogger doesn't support full one-to-one logging of Elixir types and applies the following conversions:
 
@@ -80,8 +77,6 @@ BetterstackLogger automatically logs all exceptions and formats stacktraces.
 ## Troubleshooting
 
 Run `mix betterstack_logger.verify_config` to test your config.
-
-Email <support@betterstack.app> for help!
 
 ## Installation
 

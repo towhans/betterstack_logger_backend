@@ -9,7 +9,6 @@ defmodule BetterstackLogger.HttpBackendTest do
     flush_interval: 300,
     url: "http://localhost:4000/logs/elixir/logger",
     source_id: "source",
-    api_key: "api_key",
     batch_max_size: 10,
     metadata: []
   ]
@@ -47,7 +46,7 @@ defmodule BetterstackLogger.HttpBackendTest do
 
     test "flushes after batch reaches max_batch_size" do
       allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
-      allow(BetterstackApiClient.post_logs(any(), any(), any()), return: {:ok, %Tesla.Env{}})
+      allow(BetterstackApiClient.post_logs(any(), any()), return: {:ok, %Tesla.Env{}})
 
       {:ok, state} = init_with_default(flush_interval: 60_000)
 
@@ -68,8 +67,7 @@ defmodule BetterstackLogger.HttpBackendTest do
           any(),
           is(fn batch ->
             assert length(batch) == 10
-          end),
-          any()
+          end)
         )
       )
     end

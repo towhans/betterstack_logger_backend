@@ -1,7 +1,7 @@
 defmodule BetterstackLogger.TestUtils do
   def decode_logger_body(body) do
     body
-    |> :zlib.gunzip()
-    |> Bertex.safe_decode()
+    #|> :zlib.gunzip()
+    |> Msgpax.unpack!()
   end
 end

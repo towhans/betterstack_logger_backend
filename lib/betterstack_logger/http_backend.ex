@@ -3,7 +3,7 @@ defmodule BetterstackLogger.HttpBackend do
   Implements :gen_event behaviour, handles incoming Logger messages
   """
 
-  @default_api_url "https://api.betterstack.app"
+  @default_api_url "https://in.logs.betterstack.com"
   @app :betterstack_logger_backend
   @behaviour :gen_event
 
@@ -101,7 +101,6 @@ defmodule BetterstackLogger.HttpBackend do
       |> Keyword.merge(options)
 
     url = Keyword.get(options, :url) || @default_api_url
-    api_key = Keyword.get(options, :api_key)
     source_id = Keyword.get(options, :source_id)
     level = Keyword.get(options, :level, config.level)
     format = Keyword.get(options, :format, config.format)
@@ -111,9 +110,9 @@ defmodule BetterstackLogger.HttpBackend do
 
     CLI.throw_on_missing_url!(url)
     CLI.throw_on_missing_source!(source_id)
-    CLI.throw_on_missing_api_key!(api_key)
 
-    api_client = BetterstackApiClient.new(%{url: url, api_key: api_key})
+
+    api_client = BetterstackApiClient.new(%{url: url, source_id: source_id})
 
     config =
       struct!(

@@ -6,12 +6,10 @@ defmodule BetterstackLogger.PayloadCasesTest do
   use Placebo
 
   @logger_backend HttpBackend
-  @api_key "test_api_key"
   @source "dad2a85c-683e-4150-abf1-f3001cf39e57"
 
   setup do
     Application.put_env(:betterstack_logger_backend, :url, "http://127.0.0.1:4000")
-    Application.put_env(:betterstack_logger_backend, :api_key, @api_key)
     Application.put_env(:betterstack_logger_backend, :source_id, @source)
     Application.put_env(:betterstack_logger_backend, :level, :info)
     Application.put_env(:betterstack_logger_backend, :flush_interval, 100)
@@ -30,7 +28,7 @@ defmodule BetterstackLogger.PayloadCasesTest do
     test "simple tuple" do
       allow(BetterstackApiClient.new(any()), return: %Tesla.Client{})
 
-      allow(BetterstackApiClient.post_logs(any(), any(), any()),
+      allow(BetterstackApiClient.post_logs(any(), any()),
         return: {:ok, %Tesla.Env{status: 200}}
       )
 
@@ -41,7 +39,7 @@ defmodule BetterstackLogger.PayloadCasesTest do
       )
 
       Process.sleep(200)
-      assert_called(BetterstackApiClient.post_logs(any(), any(), any()))
+      assert_called(BetterstackApiClient.post_logs(any(), any()))
     end
   end
 end

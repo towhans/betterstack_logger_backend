@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :logflare_logger, key: :value
+#     config :betterstack, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:logflare_logger, :key)
+#     Application.get_env(:betterstack_logger, :key)
 #
 # You can also configure a third-party app:
 #
