@@ -42,7 +42,7 @@ defmodule BetterstackLogger.MixProject do
 
       # Test and Dev
       {:placebo, "~> 2.0", only: :test},
-      {:ex_doc, "~> 0.29.4", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.30.1", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:bypass, "~> 2.0", only: :test}
     ]
